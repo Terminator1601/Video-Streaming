@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import VideoPlayer from "../../components/VideoPlayer/VideoPlayer";
+import CameraComponent from "@/components/Comments/CameraComponent/CameraComponent";
 
 const Index = () => {
   const router = useRouter();
@@ -13,6 +14,7 @@ const Index = () => {
     <div className="container mx-auto px-4">
       <h1>Video Player</h1>
       {normalizedVideoId && <VideoPlayer videoId={normalizedVideoId} />}
+      <CameraComponent/>
     </div>
   );
 };
