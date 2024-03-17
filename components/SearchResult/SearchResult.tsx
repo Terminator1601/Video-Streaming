@@ -48,7 +48,6 @@
 // };
 
 // export default SearchResult;
-
 import React, { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
@@ -67,7 +66,7 @@ const SearchResult = () => {
         {
           params: {
             part: "snippet",
-            maxResults: 5, // Change to 5 for minimum 5 results
+            maxResults: 6, // Change to 5 for minimum 5 results
             q: query,
             key: API_KEY,
           },
@@ -90,10 +89,10 @@ const SearchResult = () => {
           >
             <div className="flex flex-col">
               <img
-                src={video.snippet.thumbnails.default.url}
+                src={video.snippet.thumbnails.medium.url} // Use 'high' quality thumbnail
                 alt={video.snippet.title}
-                width="300"
-                height="200"
+                width="5000"
+                height="250"
               />
               <p className="mt-2">{video.snippet.title}</p>
             </div>
