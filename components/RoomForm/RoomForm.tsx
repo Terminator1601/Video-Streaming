@@ -85,8 +85,10 @@
 
 
 
+
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import app from "../../database/firebaseConfig";
+import { db } from "../../database/firebaseConfig";
+import { collection, addDoc } from "firebase/firestore"; // Import addDoc function
 
 const RoomForm = () => {
   const [formData, setFormData] = useState({
@@ -107,8 +109,8 @@ const RoomForm = () => {
     e.preventDefault();
     try {
       // Store form data in Firebase
-      await app.database().ref("userData").push(formData);
-      console.log("Form data stored in Firebase:", formData);
+      const docRef = await addDoc(collection(db, "userData"), formData); // Use addDoc to add document
+      console.log("Document written with ID: ", docRef.id);
       // Reset form fields
       setFormData({
         username: "",
