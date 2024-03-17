@@ -1,45 +1,70 @@
+"use client";
 
-"use client"
+// import React, { useState, ChangeEvent, FormEvent } from "react";
+// import { db } from "../../database/firebaseConfig";
+// import { query, collection, addDoc, where, getDocs } from "firebase/firestore";
 
-// import React, { useState } from "react";
-// import firebase from "../../database/firebaseConfig";
+// // import { collection, addDoc } from "firebase/firestore"; // Import addDoc function
 
 // const RoomForm = () => {
 //   const [formData, setFormData] = useState({
 //     username: "",
 //     roomNo: "",
-//     secretKey: ""
+//     secretKey: "",
 //   });
 
-//   const handleChange = (e) => {
+//   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 //     const { name, value } = e.target;
 //     setFormData((prevFormData) => ({
 //       ...prevFormData,
-//       [name]: value
+//       [name]: value,
 //     }));
 //   };
 
-//   const handleSubmit = async (e) => {
+//   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 //     e.preventDefault();
 //     try {
-//       // Store form data in Firebase
-//       await firebase.database().ref("userData").push(formData);
-//       console.log("Form data stored in Firebase:", formData);
-//       // Reset form fields
-//       setFormData({
-//         username: "",
-//         roomNo: "",
-//         secretKey: ""
-//       });
+//       // Check if the username and room number already exist
+//       const querySnapshot = await getDocs(
+//         query(
+//           collection(db, "userData"),
+//           where("username", "==", formData.username),
+//           where("roomNo", "==", formData.roomNo)
+//         )
+//       );
+
+//       if (!querySnapshot.empty) {
+//         // If the document with the same username and room number exists
+//         window.alert(
+//           "You have already created a room with this username and room number."
+//         );
+//       } else {
+//         // Store form data in Firebase
+//         const docRef = await addDoc(collection(db, "userData"), formData);
+//         console.log("Document written with ID: ", docRef.id);
+//         // Reset form fields
+//         setFormData({
+//           username: "",
+//           roomNo: "",
+//           secretKey: "",
+//         });
+//         window.alert("Room created successfully.");
+//       }
 //     } catch (error) {
 //       console.error("Error storing form data in Firebase:", error);
+//       window.alert("Error creating the room. Please try again later.");
 //     }
 //   };
 
 //   return (
-//     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-gray-100 rounded-md shadow-md">
+//     <form
+//       onSubmit={handleSubmit}
+//       className="max-w-md mx-auto p-4 bg-gray-100 rounded-md shadow-md"
+//     >
 //       <div className="mb-4">
-//         <label htmlFor="username" className="block text-gray-700">Username:</label>
+//         <label htmlFor="username" className="block text-gray-700">
+//           Username:
+//         </label>
 //         <input
 //           type="text"
 //           id="username"
@@ -51,7 +76,9 @@
 //         />
 //       </div>
 //       <div className="mb-4">
-//         <label htmlFor="roomNo" className="block text-gray-700">Room No:</label>
+//         <label htmlFor="roomNo" className="block text-gray-700">
+//           Room No:
+//         </label>
 //         <input
 //           type="text"
 //           id="roomNo"
@@ -63,7 +90,9 @@
 //         />
 //       </div>
 //       <div className="mb-4">
-//         <label htmlFor="secretKey" className="block text-gray-700">Secret Key:</label>
+//         <label htmlFor="secretKey" className="block text-gray-700">
+//           Secret Key:
+//         </label>
 //         <input
 //           type="password"
 //           id="secretKey"
@@ -74,7 +103,10 @@
 //           className="w-full mt-1 p-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
 //         />
 //       </div>
-//       <button type="submit" className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">
+//       <button
+//         type="submit"
+//         className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
+//       >
 //         Submit
 //       </button>
 //     </form>
@@ -83,49 +115,79 @@
 
 // export default RoomForm;
 
+// RoomForm.tsx
 
-
+// RoomForm.tsx
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { db } from "../../database/firebaseConfig";
-import { collection, addDoc } from "firebase/firestore"; // Import addDoc function
+import { query, collection, addDoc, where, getDocs } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 const RoomForm = () => {
   const [formData, setFormData] = useState({
     username: "",
     roomNo: "",
-    secretKey: ""
+    secretKey: "",
   });
+
+  // const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      // Store form data in Firebase
-      const docRef = await addDoc(collection(db, "userData"), formData); // Use addDoc to add document
-      console.log("Document written with ID: ", docRef.id);
-      // Reset form fields
-      setFormData({
-        username: "",
-        roomNo: "",
-        secretKey: ""
-      });
+      // Check if the username and room number already exist
+      const querySnapshot = await getDocs(
+        query(
+          collection(db, "userData"),
+          where("username", "==", formData.username),
+          where("roomNo", "==", formData.roomNo)
+        )
+      );
+
+      if (!querySnapshot.empty) {
+        // If the document with the same username and room number exists
+        window.alert(
+          "You have already created a room with this username and room number."
+        );
+        window.location.href = `/Streaming/${formData.roomNo}`;
+      } else {
+        // Store form data in Firebase
+        const docRef = await addDoc(collection(db, "userData"), formData);
+        console.log("Document written with ID: ", docRef.id);
+        // Reset form fields
+        setFormData({
+          username: "",
+          roomNo: "",
+          secretKey: "",
+        });
+        window.alert("Room created successfully.");
+        // Redirect to the dynamic page under /Streaming using Next.js's navigation
+        window.location.href = `/Streaming/${formData.roomNo}`;
+      }
     } catch (error) {
       console.error("Error storing form data in Firebase:", error);
+      window.alert("Error creating the room. Please try again later.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-gray-100 rounded-md shadow-md">
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-md mx-auto p-4 bg-gray-100 rounded-md shadow-md"
+    >
       <div className="mb-4">
-        <label htmlFor="username" className="block text-gray-700">Username:</label>
+        <label htmlFor="username" className="block text-gray-700">
+          Username:
+        </label>
         <input
           type="text"
           id="username"
@@ -137,7 +199,9 @@ const RoomForm = () => {
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="roomNo" className="block text-gray-700">Room No:</label>
+        <label htmlFor="roomNo" className="block text-gray-700">
+          Room No:
+        </label>
         <input
           type="text"
           id="roomNo"
@@ -149,7 +213,9 @@ const RoomForm = () => {
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="secretKey" className="block text-gray-700">Secret Key:</label>
+        <label htmlFor="secretKey" className="block text-gray-700">
+          Secret Key:
+        </label>
         <input
           type="password"
           id="secretKey"
@@ -160,7 +226,10 @@ const RoomForm = () => {
           className="w-full mt-1 p-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
         />
       </div>
-      <button type="submit" className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">
+      <button
+        type="submit"
+        className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
+      >
         Submit
       </button>
     </form>
