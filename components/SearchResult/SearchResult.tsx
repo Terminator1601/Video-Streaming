@@ -48,6 +48,10 @@
 // };
 
 // export default SearchResult;
+
+
+
+
 import React, { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
@@ -59,7 +63,6 @@ const SearchResult = () => {
   const [videos, setVideos] = useState<any[]>([]); // Specify type any[] for videos state
 
   const searchVideos = async (query: string) => {
-    // Explicitly specify type string for query
     try {
       const response = await axios.get(
         "https://www.googleapis.com/youtube/v3/search",
@@ -68,6 +71,7 @@ const SearchResult = () => {
             part: "snippet",
             maxResults: 6, // Change to 5 for minimum 5 results
             q: query,
+            type: "video", // Specify type as 'video' to filter out shorts
             key: API_KEY,
           },
         }
@@ -77,6 +81,7 @@ const SearchResult = () => {
       console.error("Error fetching videos:", error);
     }
   };
+  
 
   return (
     <div className="container mx-auto px-4">
