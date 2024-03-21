@@ -11,15 +11,15 @@
 //   const [videos, setVideos] = useState<any[]>([]); // Specify type any[] for videos state
 
 //   const searchVideos = async (query: string) => {
-//     // Explicitly specify type string for query
 //     try {
 //       const response = await axios.get(
 //         "https://www.googleapis.com/youtube/v3/search",
 //         {
 //           params: {
 //             part: "snippet",
-//             maxResults: 5, // Change to 5 for minimum 5 results
+//             maxResults: 6, // Change to 5 for minimum 5 results
 //             q: query,
+//             type: "video", // Specify type as 'video' to filter out shorts
 //             key: API_KEY,
 //           },
 //         }
@@ -35,11 +35,19 @@
 //       <SearchBox onSearch={searchVideos} />
 //       <div className="grid grid-cols-3 gap-4">
 //         {videos.map((video: any) => (
-//           <Link key={video.id.videoId} href={`/Streaming?${video.id.videoId}`}>
-//             <img
-//               src={video.snippet.thumbnails.default.url}
-//               alt={video.snippet.title}
-//             />
+//           <Link
+//             key={video.id.videoId}
+//             href={`/Streaming?videoId=${video.id.videoId}`}
+//           >
+//             <div className="flex flex-col">
+//               <img
+//                 src={video.snippet.thumbnails.medium.url} // Use 'high' quality thumbnail
+//                 alt={video.snippet.title}
+//                 width="5000"
+//                 height="250"
+//               />
+//               <p className="mt-2">{video.snippet.title}</p>
+//             </div>
 //           </Link>
 //         ))}
 //       </div>
@@ -48,9 +56,6 @@
 // };
 
 // export default SearchResult;
-
-
-
 
 import React, { useState } from "react";
 import axios from "axios";
@@ -81,7 +86,6 @@ const SearchResult = () => {
       console.error("Error fetching videos:", error);
     }
   };
-  
 
   return (
     <div className="container mx-auto px-4">
@@ -90,13 +94,14 @@ const SearchResult = () => {
         {videos.map((video: any) => (
           <Link
             key={video.id.videoId}
-            href={`/Streaming?videoId=${video.id.videoId}`}
+            href={`/Streaming/[roomId]?videoId=${video.id.videoId}`}
+            as={`/Streaming/${video.id.videoId}`}
           >
-            <div className="flex flex-col">
+            <div className="cursor-pointer">
               <img
                 src={video.snippet.thumbnails.medium.url} // Use 'high' quality thumbnail
                 alt={video.snippet.title}
-                width="5000"
+                width="500"
                 height="250"
               />
               <p className="mt-2">{video.snippet.title}</p>

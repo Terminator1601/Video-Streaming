@@ -1,10 +1,9 @@
-"use client";
+// "use client";
 
 // import React, { useState, ChangeEvent, FormEvent } from "react";
 // import { db } from "../../database/firebaseConfig";
 // import { query, collection, addDoc, where, getDocs } from "firebase/firestore";
-
-// // import { collection, addDoc } from "firebase/firestore"; // Import addDoc function
+// import { useRouter } from "next/router";
 
 // const RoomForm = () => {
 //   const [formData, setFormData] = useState({
@@ -12,6 +11,8 @@
 //     roomNo: "",
 //     secretKey: "",
 //   });
+
+//   // const router = useRouter();
 
 //   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 //     const { name, value } = e.target;
@@ -38,6 +39,7 @@
 //         window.alert(
 //           "You have already created a room with this username and room number."
 //         );
+//         window.location.href = `/Streaming/${formData.roomNo}`;
 //       } else {
 //         // Store form data in Firebase
 //         const docRef = await addDoc(collection(db, "userData"), formData);
@@ -49,6 +51,8 @@
 //           secretKey: "",
 //         });
 //         window.alert("Room created successfully.");
+//         // Redirect to the dynamic page under /Streaming using Next.js's navigation
+//         window.location.href = `/Streaming/${formData.roomNo}`;
 //       }
 //     } catch (error) {
 //       console.error("Error storing form data in Firebase:", error);
@@ -115,9 +119,13 @@
 
 // export default RoomForm;
 
-// RoomForm.tsx
 
-// RoomForm.tsx
+
+
+
+
+
+"use client";
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { db } from "../../database/firebaseConfig";
@@ -130,8 +138,6 @@ const RoomForm = () => {
     roomNo: "",
     secretKey: "",
   });
-
-  // const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -161,7 +167,10 @@ const RoomForm = () => {
         window.location.href = `/Streaming/${formData.roomNo}`;
       } else {
         // Store form data in Firebase
-        const docRef = await addDoc(collection(db, "userData"), formData);
+        const docRef = await addDoc(collection(db, "userData"), {
+          ...formData,
+          roomId: formData.roomNo // Setting roomId as document ID
+        });
         console.log("Document written with ID: ", docRef.id);
         // Reset form fields
         setFormData({
